@@ -65,8 +65,9 @@ def load_labels():
     return imagenet_labels
 
 if __name__=="__main__":
+    target_class=10
     for image_name in ["bird", "cat", "shark", "snake"]:
         image_path=f"inputs/{image_name}.jpg"
         image=load_file_path_to_tensor(image_path)
-        optimize_towards_class(image, 10)
+        optimize_towards_class(image, target_class)
         classify(image)    
