@@ -3,7 +3,7 @@ Method for adding adversarial noise to imagenet images.
 To use: 
 1. Download the repo
 2. Make sure all required packages are installed. You can do this by running `pip install -r requirements.txt`
-3. Run `main.py` from the command line, with two positional arguments, the desired class number (int 0-999) and a file name to an input image. The file name can also be "bird", "cat", "shark", or "snake" to use the basic images I was testing on. 
+3. Run `main.py` from the command line, with two positional arguments, the desired class number (int 0-999) and a file name to an input image. The file name can also be "bird", "cat", "shark", or "snake" to use the basic images I was testing on. See example usages below.
 4. `main.py` will add adversarial noise to the image to make imagenet think it is a different class. The before/after comparison will be saved to the comparison_images/ directory.
 
 
