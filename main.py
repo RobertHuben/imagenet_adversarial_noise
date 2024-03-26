@@ -16,8 +16,6 @@ def load_file_path_to_tensor(path_to_image):
     image = image.unsqueeze(0)  # Add a batch dimension
     return image
 
-
-
 def classify(input_tensor):
     # simple method written by ChatGPT to start the classifier off
     # Load a pre-trained model, for example, ResNet18
@@ -33,14 +31,25 @@ def classify(input_tensor):
 
     # Decode the prediction
     # Load the labels (ensure you have the ImageNet labels file if using an ImageNet model)
-    imagenet_labels = []
-    with open("imagenet_classes.txt") as f:  # You need to have this file with the class names
-        imagenet_labels = [line.split(", ")[1].strip() for line in f.readlines()]
+    imagenet_labels = load_labels()
 
     # Get the predicted class label
     predicted_class = imagenet_labels[predicted.item()]
 
     print(f"Predicted class: {predicted_class}")
+
+def loss_from_given_class(image_as_tensor, model, target_class):
+    model_output = model(image_as_tensor)
+    loss=-1*torch.log(model_output[target_class])
+    return loss
+
+def l2_loss(image_as_tensor, original_image_as_tensor):
+    return torch.norm(image_as_tensor-original_image_as_tensor, p=2)
+
+def load_labels():
+    with open("imagenet_classes.txt") as f:  # You need to have this file with the class names
+        imagenet_labels = [line.split(", ")[1].strip() for line in f.readlines()]
+    return imagenet_labels
 
 for image_name in ["bird", "cat", "shark", "snake"]:
     image_path=f"inputs/{image_name}.jpg"
