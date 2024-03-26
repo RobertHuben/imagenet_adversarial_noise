@@ -1,5 +1,5 @@
 import torch
-from torchvision import models, transforms, utils
+from torchvision import models, transforms
 from PIL import Image
 from matplotlib import pyplot as plt
 import argparse
@@ -55,7 +55,7 @@ def load_labels():
         imagenet_labels = [line.split(", ")[1].strip() for line in f.readlines()]
     return imagenet_labels
 
-def optimize_towards_class(original_image, target_class, num_iter=10, l2_loss_coefficient=0, print_updates=True):
+def optimize_towards_class(original_image, target_class, num_iter=10, l2_loss_coefficient=1e-2, print_updates=True):
     '''
     runs a simple optimization loop to increase the probability of the model saying the target class, without greatly increasing l2 distance from the original
     loss functions are loss_from_given_class and loss_l2, defined below
@@ -86,7 +86,7 @@ def loss_from_given_class(image_as_tensor, target_class):
     this adds noise to the image to push it to being the target class
     '''
     model_output = model_probabilities(image_as_tensor)
-    loss=torch.log(1-model_output[target_class])
+    loss=-1*torch.log(model_output[target_class])
     return loss
 
 def loss_l2(image_as_tensor, original_image_as_tensor):
