@@ -8,10 +8,9 @@ To use:
 
 
 Example usage: 
-`python main.py 50 cat`
 
-`python main.py 0 snake`
-
-`python main.py 998 inputs/my_custom_image.jpg`
+```python main.py 50 cat
+python main.py 0 snake
+python main.py 998 inputs/my_custom_image.jpg```
 
 To avoid errors, make sure the image is in the inputs/ directory.
