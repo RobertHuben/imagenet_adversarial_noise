@@ -36,13 +36,13 @@ def load_image_from_file_path(path_to_image):
     '''
     loads the image at path_to_image, and processes it to be ready for imagenet
     '''
+    image = Image.open(path_to_image)
     # Define the transformation to apply to the image
     transform = transforms.Compose([
         transforms.Resize(256),  # Resize the image to 256x256 pixels
         transforms.CenterCrop(224),  # Crop the image to 224x224 pixels from the center
         transforms.ToTensor(),  # Convert the image to a PyTorch tensor
     ])
-    image = Image.open(path_to_image)
     image = transform(image)
     image = image.unsqueeze(0)  # Add a batch dimension
     return image
@@ -144,7 +144,8 @@ def main():
         original_image=load_image_from_file_path(file_path)
         noised_image=optimize_towards_class(original_image, args.class_number)
     except FileNotFoundError:
-        print(f"Could not load the image at {file_path}. Please check file path and try again")
+        print(f"Could not load the image at {file_path}. Please ensure an image is located there and try again")
+        return
 
     file_stem=file_path.split('/')[-1].split('.')[0]
     save_file_name=f"comparison_images/{file_stem}_to_class_{args.class_number}"
