@@ -101,16 +101,32 @@ def make_comparison_image(original_image, noised_image, save_file_name="comparis
     '''
     plots the two images and their classes against each other
     '''
-    plt.subplot(1, 2, 1)
+    plt.subplot(2, 2, 1)
     plt.imshow(original_image[0].transpose(0,2).transpose(0,1).clamp(0,1))
     original_prob, original_class_name, _=top_one_classification(original_image)
     plt.title(f"Original:\nPredicts {original_class_name}\n(p={original_prob:.1%})")
 
-    plt.subplot(1, 2, 2)
+    plt.subplot(2, 2, 2)
     plt.imshow(noised_image[0].detach().transpose(0,2).transpose(0,1).clamp(0,1))
     noised_prob, noised_class_name, _=top_one_classification(noised_image)
     plt.title(f"Adversarial Noise:\nPredicts {noised_class_name}\n(p={noised_prob:.1%})")
+
+    differences=(original_image[0]-noised_image[0]).detach().transpose(0,2).transpose(0,1)
+    rescaled_differences=rescale_to_0_1(differences)
+
+    plt.subplot(2, 2, 3)
+    plt.imshow(differences)
+    plt.title(f"Image Difference (Absolute):")
+
+    plt.subplot(2, 2, 4)
+    plt.imshow(rescaled_differences)
+    plt.title(f"Image Difference (Rescaled):")
     plt.savefig(save_file_name)
+
+def rescale_to_0_1(image):
+    max_along_axes=torch.max(torch.max(image, dim=0, keepdim=True).values, dim=1, keepdim=True).values
+    min_along_axes=torch.min(torch.min(image, dim=0, keepdim=True).values, dim=1, keepdim=True).values
+    return image-min_along_axes/(max_along_axes-min_along_axes)
 
 def main():
     # Arg Parser written by ChatGPT
